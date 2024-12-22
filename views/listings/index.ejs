@@ -1,0 +1,151 @@
+<% layout("/layouts/boilerplate") %>
+
+<body>
+    
+  <style>
+    #filters{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+
+    }
+    .filter{
+      text-align: center;
+      margin-right: 2rem;
+      margin-top: 2rem;
+      opacity: 0.7;
+      
+    }
+    .filter:hover{
+      opacity: 1;
+      cursor: pointer;
+    }
+    .filter p{
+      font-size: 1rem;
+    }
+    .tax-info{
+      display: flex;
+      align-items: center;
+    }
+  
+    .tax-toggle{
+      border: 1px solid black;
+      border-radius: 1rem;
+      
+      padding: 1rem;
+      
+    }
+  </style>
+        
+        <div id="filters">
+          <div class="filter">
+           <div><i class="fa-solid fa-fire"></i></div> 
+            <p>Trending</p>
+          </div>
+          <div class="filter">
+           <div><i class="fa-solid fa-bed"></i></div> 
+            <p>Rooms</p>
+          </div>
+          <div class="filter">
+            <div><i class="fa-solid fa-mountain-city"></i></div> 
+             <p>Iconic cities</p>
+           </div>
+           <div class="filter">
+            <div><i class="fa-solid fa-mountain"></i></div> 
+             <p>Mountains</p>
+           </div>
+           <div class="filter">
+            <div><i class="fa-brands fa-fort-awesome-alt"></i></div> 
+             <p>Castles</p>
+           </div>
+           <div class="filter">
+            <div><i class="fa-regular fa-snowflake"></i></div> 
+             <p>Arctic</p>
+           </div>
+           <div class="filter">
+            <div><i class="fa-solid fa-tree"></i></div> 
+             <p>Camping</p>
+           </div>
+           <div class="filter">
+            <div><i class="fa-solid fa-wheat-awn"></i></div> 
+             <p>Farms</p>
+           </div>
+           <div class="filter">
+            <div><i class="fa-solid fa-person-swimming"></i></div> 
+             <p>Amazing Pools</p>
+           </div>
+           <div class="filter">
+            <div><i class="fa-solid fa-umbrella-beach"></i></div> 
+             <p>Beach</p>
+           </div>
+           <div class="filter">
+            <div><i class="fa-solid fa-paw"></i></div> 
+             <p>Forest Adventure</p>
+           </div>
+           <div class="filter">
+            <div><i class="fa-solid fa-screwdriver"></i></div> 
+             <p>River</p>
+           </div>
+           <div class="filter">
+            <div><i class="fa-solid fa-temperature-arrow-up"></i></div> 
+             <p>Warm</p>
+           </div>
+           <div class="tax-toggle">
+            <div class="form-check-reverse form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+              <label class="form-check-label" for="flexSwitchCheckDefault">Display total after taxes</label>
+            </div>
+           </div>
+        </div>
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+          <% for(let l of allData){ %>
+            <a class="listing-div"  href="/listings/<%= l._id %>">
+              <div class="card col listing-card" >
+                <img 
+                src="<%= l.image.url %>" 
+                class="card-img-top" 
+                alt="<%= l.image.filename %>"
+                onerror="this.src='https://images.pexels.com/photos/1051073/pexels-photo-1051073.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1';"
+                style="height: 20rem;" />
+             <div class="card-img-overlay"></div>
+                  <div class="card-body">
+                    <p class="card-text">
+                     <b><%=  l.title %> </b> <br>
+                      ₹ <%= typeof l.price === 'number' ? l.price.toLocaleString("en-IN") : 0 %> / night <div class="tax-info"> <i> &nbsp;&nbsp; +18% GST</i> </div>           </p>
+                  </div>
+                </div>
+                <% } %> 
+          </div>
+            </a>
+           
+        
+    <ul>
+        <!-- <% for(let l of allData){ %>
+        <li><a href="/listings/<%=  l._id %> "><%=  l.title %> </a></li>
+        <% } %>  -->
+    </ul>
+</body>
+
+<script>
+  let taxSwitch = document.getElementById('flexSwitchCheckDefault');
+  taxSwitch.addEventListener('change', (e) => {
+    if(e.target.checked){
+      document.querySelectorAll('.card-text').forEach((el) => {
+        let price = parseFloat(el.innerText.split('₹')[1].split('/')[0].replace(/,/g, '').trim());
+        let tax = (price * 0.18).toFixed(2);
+        let totalPrice = (price + parseFloat(tax)).toFixed(2);
+        el.innerText = el.innerText + ` (₹ ${parseFloat(totalPrice).toLocaleString('en-IN')} after taxes)`;
+      });
+    }else{
+      document.querySelectorAll('.card-text').forEach((el) => {
+        el.innerText = el.innerText.split('(')[0].trim();
+      });
+    }
+  });
+  taxSwitch.addEventListener('click', (e) => {
+    document.querySelectorAll('.tax-info').forEach((el) => {
+      el.style.display = !e.target.checked ? 'block' : 'none';
+    });
+  });
+</script>
+
